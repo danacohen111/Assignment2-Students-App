@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.assignment2_studentsapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.assignment2_studentsapp"
@@ -32,6 +32,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 

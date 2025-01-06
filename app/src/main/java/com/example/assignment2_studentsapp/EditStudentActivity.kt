@@ -48,5 +48,9 @@ class EditStudentActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        binding.cancelButton.setOnClickListener {
+            finish()
+        }
     }
 }

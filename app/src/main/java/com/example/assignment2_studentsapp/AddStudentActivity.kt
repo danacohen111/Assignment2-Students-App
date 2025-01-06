@@ -22,5 +22,8 @@ class AddStudentActivity : AppCompatActivity() {
                 finish()
             }
         }
+        binding.cancelButton.setOnClickListener {
+            finish()
+        }
     }
 }

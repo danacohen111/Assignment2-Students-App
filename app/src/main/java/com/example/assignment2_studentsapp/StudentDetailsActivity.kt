@@ -32,4 +32,14 @@ class StudentDetailsActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        selectedStudent = StudentRepository.students.find { it.id == selectedStudent.id } ?: return
+
+        binding.studentName.text = selectedStudent.name
+        binding.studentId.text = selectedStudent.id
+        binding.studentImage.setImageResource(R.drawable.student_pic)
+    }
 }

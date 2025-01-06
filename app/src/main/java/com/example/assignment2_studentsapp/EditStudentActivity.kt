@@ -1,47 +1,61 @@
 package com.example.assignment2_studentsapp
 
-import Student
-import StudentRepository
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.assignment2_studentsapp.databinding.ActivityEditStudentBinding
+import Student
+import android.content.Intent
 
 class EditStudentActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityEditStudentBinding
-    private lateinit var selectedStudent: Student
+    private var student: Student? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityEditStudentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val studentId = intent.getStringExtra("STUDENT_ID") ?: return
+        val studentId = intent.getStringExtra("STUDENT_ID")
+        student = StudentRepository.students.find { it.id == studentId }
 
-        selectedStudent = StudentRepository.students.find { it.id == studentId } ?: return
+        student?.let {
+            binding.studentNameInput.setText(it.name)
+            binding.studentIdInput.setText(it.id)
+            binding.studentPhoneInput.setText(it.phone)
+            binding.studentAddressInput.setText(it.address)
+        }
 
-        binding.editStudentName.setText(selectedStudent.name)
-        binding.editStudentId.setText(selectedStudent.id)
+        binding.saveButton.setOnClickListener {
+            val name = binding.studentNameInput.text.toString()
+            val id = binding.studentIdInput.text.toString()
+            val phone = binding.studentPhoneInput.text.toString()
+            val address = binding.studentAddressInput.text.toString()
 
-        binding.saveStudentButton.setOnClickListener {
-            val newName = binding.editStudentName.text.toString()
-            val newId = binding.editStudentId.text.toString()
-
-            if (newName.isNotBlank() && newId.isNotBlank()) {
-                selectedStudent.name = newName
-                selectedStudent.id = newId
-                Toast.makeText(this, "Student updated!", Toast.LENGTH_SHORT).show()
-                finish()
+            if (name.isNotEmpty() && id.isNotEmpty() && phone.isNotEmpty() && address.isNotEmpty()) {
+                student?.let {
+                    it.name = name
+                    it.id = id
+                    it.phone = phone
+                    it.address = address
+                    Toast.makeText(this, "Student updated", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
             } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
 
-        binding.deleteStudentButton.setOnClickListener {
-            StudentRepository.students.remove(selectedStudent)
-            Toast.makeText(this, "Student deleted!", Toast.LENGTH_SHORT).show()
+        binding.cancelButton.setOnClickListener {
+            finish()
+        }
+
+        binding.deleteButton.setOnClickListener {
+            StudentRepository.students.remove(student)
+            Toast.makeText(this, "Student deleted successfully", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
             finish()
         }
     }

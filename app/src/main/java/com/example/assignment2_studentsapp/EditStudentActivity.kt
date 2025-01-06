@@ -2,6 +2,7 @@ package com.example.assignment2_studentsapp
 
 import Student
 import StudentRepository
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +43,9 @@ class EditStudentActivity : AppCompatActivity() {
         binding.deleteStudentButton.setOnClickListener {
             StudentRepository.students.remove(selectedStudent)
             Toast.makeText(this, "Student deleted!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
             finish()
         }
     }
